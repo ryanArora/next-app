@@ -10,6 +10,20 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model User {
+    id           String    @id @default(cuid())
+    username     String    @unique
+    passwordHash String
+    sessions     Session[]
+}
+
+model Session {
+    id      String   @id
+    expires DateTime
+    userId  String
+    user    User     @relation(fields: [userId], references: [id])
+}
+
 model Example {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
