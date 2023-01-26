@@ -1,5 +1,5 @@
+import { signupSchema } from "@/common/schema/auth";
 import { type FC } from "react";
-import { signupSchema } from "../../common/schema/auth";
 import { api } from "../../utils/api";
 import { Form } from "../form/Form";
 

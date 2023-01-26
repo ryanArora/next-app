@@ -1,4 +1,4 @@
-import { createTRPCRouter } from "../../trpc";
+import { createTRPCRouter } from "@/server/api/trpc";
 import { loginProcedure } from "./login";
 import { logoutProcedure } from "./logout";
 import { logoutAllProcedure } from "./logoutAll";
