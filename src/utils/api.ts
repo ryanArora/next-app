@@ -43,7 +43,7 @@ export const api = createTRPCNext<AppRouter>({
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
           headers: {
-            Authorization: window.localStorage.getItem("sessionId") ?? "",
+            Authorization: "not implemented",
           },
         }),
       ],

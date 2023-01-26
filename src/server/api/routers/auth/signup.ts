@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
-import { makeSessionCreateOptions, signupSchema } from ".";
-import { type Session } from "../../../auth";
+import { signupSchema } from "../../../../common/schema/auth";
+import { makeSessionCreateOptions, type Session } from "../../../auth";
 import { publicProcedure } from "../../trpc";
 
 export const signupProcedure = publicProcedure

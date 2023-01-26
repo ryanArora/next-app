@@ -1,6 +1,10 @@
 import { TRPCError } from "@trpc/server";
-import { loginSchema, makeSessionCreateOptions } from ".";
-import { verifyCredentials, type Session } from "../../../auth";
+import { loginSchema } from "../../../../common/schema/auth";
+import {
+  makeSessionCreateOptions,
+  verifyCredentials,
+  type Session,
+} from "../../../auth";
 import { publicProcedure } from "../../trpc";
 
 export const loginProcedure = publicProcedure

@@ -4,8 +4,16 @@ import {
   type User as DatabaseUser,
 } from "@prisma/client";
 import bcrypt from "bcrypt";
-import type { z } from "zod";
-import type { loginSchema } from "./api/routers/auth";
+import crypto from "node:crypto";
+import { type z } from "zod";
+import { type loginSchema } from "../common/schema/auth";
+
+export const makeSessionCreateOptions = () => {
+  return {
+    id: crypto.randomBytes(64).toString("hex"), // 128 characters
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+  };
+};
 
 export type Session = Pick<DatabaseSession, "id" | "expires"> & {
   user: Pick<DatabaseUser, "id" | "username">;

@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { loginSchema } from ".";
+import { loginSchema } from "../../../../common/schema/auth";
 import { verifyCredentials } from "../../../auth";
 import { protectedProcedure } from "../../trpc";
 
