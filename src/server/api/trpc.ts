@@ -17,10 +17,13 @@
  *
  */
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { getServerSession } from "../auth";
 
 import { prisma } from "../db";
 
-type CreateContextOptions = Record<string, never>;
+type CreateContextOptions = {
+  requestSessionId: string;
+};
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use
@@ -31,8 +34,12 @@ type CreateContextOptions = Record<string, never>;
  * - trpc's `createSSGHelpers` where we don't have req/res
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
-const createInnerTRPCContext = (_opts: CreateContextOptions) => {
+const createInnerTRPCContext = async (opts: CreateContextOptions) => {
   return {
+    session: await getServerSession({
+      prisma,
+      requestSessionId: opts.requestSessionId,
+    }),
     prisma,
   };
 };
@@ -42,8 +49,10 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
  * process every request that goes through your tRPC endpoint
  * @link https://trpc.io/docs/context
  */
-export const createTRPCContext = (_opts: CreateNextContextOptions) => {
-  return createInnerTRPCContext({});
+export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+  return createInnerTRPCContext({
+    requestSessionId: opts.req.headers.authorization ?? "",
+  });
 };
 
 /**
@@ -52,7 +61,7 @@ export const createTRPCContext = (_opts: CreateNextContextOptions) => {
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
@@ -83,3 +92,31 @@ export const createTRPCRouter = t.router;
  * can still access user session data if they are logged in
  */
 export const publicProcedure = t.procedure;
+
+/**
+ * Reusable middleware that enforces users are logged in before running the
+ * procedure
+ */
+const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
+  if (!ctx.session) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  // to infer session as non-null, we need to return a new context
+  return next({
+    ctx: {
+      session: ctx.session,
+    },
+  });
+});
+
+/**
+ * Protected (authed) procedure
+ *
+ * If you want a query or mutation to ONLY be accessible to logged in users, use
+ * this. It verifies the session is valid and guarantees ctx.session.user is not
+ * null
+ *
+ * @see https://trpc.io/docs/procedures
+ */
+export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
