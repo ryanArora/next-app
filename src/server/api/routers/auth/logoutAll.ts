@@ -1,7 +1,7 @@
+import { loginSchema } from "@/common/schema/auth";
+import { protectedProcedure } from "@/server/api/trpc";
+import { verifyCredentials } from "@/server/auth";
 import { TRPCError } from "@trpc/server";
-import { loginSchema } from "../../../../common/schema/auth";
-import { verifyCredentials } from "../../../auth";
-import { protectedProcedure } from "../../trpc";
 
 export const logoutAllProcedure = protectedProcedure
   .input(loginSchema)

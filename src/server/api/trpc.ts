@@ -16,10 +16,10 @@
  * processing a request
  *
  */
+import { getServerSession } from "@/server/auth";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-import { getServerSession } from "../auth";
 
-import { prisma } from "../db";
+import { prisma } from "@/server/db";
 
 type CreateContextOptions = {
   requestSessionId: string;

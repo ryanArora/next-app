@@ -1,7 +1,7 @@
+import { signupSchema } from "@/common/schema/auth";
+import { publicProcedure } from "@/server/api/trpc";
+import { makeSessionCreateOptions, type Session } from "@/server/auth";
 import bcrypt from "bcrypt";
-import { signupSchema } from "../../../../common/schema/auth";
-import { makeSessionCreateOptions, type Session } from "../../../auth";
-import { publicProcedure } from "../../trpc";
 
 export const signupProcedure = publicProcedure
   .input(signupSchema)

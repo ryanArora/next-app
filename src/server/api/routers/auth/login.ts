@@ -1,11 +1,11 @@
-import { TRPCError } from "@trpc/server";
-import { loginSchema } from "../../../../common/schema/auth";
+import { loginSchema } from "@/common/schema/auth";
+import { publicProcedure } from "@/server/api/trpc";
 import {
   makeSessionCreateOptions,
   verifyCredentials,
   type Session,
-} from "../../../auth";
-import { publicProcedure } from "../../trpc";
+} from "@/server/auth";
+import { TRPCError } from "@trpc/server";
 
 export const loginProcedure = publicProcedure
   .input(loginSchema)

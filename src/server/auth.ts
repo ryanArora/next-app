@@ -1,3 +1,4 @@
+import { type loginSchema } from "@/common/schema/auth";
 import {
   type PrismaClient,
   type Session as DatabaseSession,
@@ -6,7 +7,6 @@ import {
 import bcrypt from "bcrypt";
 import crypto from "node:crypto";
 import { type z } from "zod";
-import { type loginSchema } from "../common/schema/auth";
 
 export const makeSessionCreateOptions = () => {
   return {
